@@ -12,7 +12,7 @@ class GetAllLogs(APIView):
     """Returns all logs
     """
 
-    # permission_classes = (IsSuperAdminUser,)
+    permission_classes = (IsSuperAdminUser,)
 
     def get(self, request, *args, **kwargs):
 
