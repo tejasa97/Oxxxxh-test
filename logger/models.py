@@ -26,7 +26,7 @@ class MongoLogsClient():
 
         if log_type is None:
             conn = self.client.get_collection(MONGO_LOGS_COLLECTION)
-            return list(conn.find({}, {'_id': 0, 'message': 1, 'asctime': 1}))
+            return list(conn.find({}, {'_id': 0, 'type': 1, 'message': 1, 'asctime': 1}))
 
         if self.LogType.has_value(log_type) is False:
             raise Exception("Invalid log type")
