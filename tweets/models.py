@@ -124,7 +124,7 @@ class Tweet(BaseModel):
 
     def __str__(self):
 
-        return f"<Tweet:{self.id} - {self.data[:10]}>"
+        return f"<Tweet[ID: {self.id},DATA: {self.data[:10]}>"
 
     class Meta:
         ordering = ['-created_date']
