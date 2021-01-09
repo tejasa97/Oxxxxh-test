@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import sys
 from pathlib import Path
 import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,8 +26,7 @@ SECRET_KEY = 'f5!jewwwf%edp=4fv74rl_!dot6b^wdxdnzm%5lov=nq_)rz-r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -79,11 +79,66 @@ WSGI_APPLICATION = 'oslash_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'oslash',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'audit_log': {
+            'class': 'logger.logging_middleware.AuditLoggingHandler',
+            'database': 'mongolog',
+            'collection': 'logs',
+        },
+        'access_log': {
+            'class': 'logger.logging_middleware.AccessLoggingHandler',
+            'database': 'mongolog',
+            'collection': 'logs',
+        },
+        'action_log': {
+            'class': 'logger.logging_middleware.ActionLoggingHandler',
+            'database': 'mongolog',
+            'collection': 'logs',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout
+        },
+    },
+    'loggers': {
+        'audit': {
+            'handlers': ['audit_log'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'access': {
+            'handlers': ['access_log'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'action': {
+            'handlers': ['action_log'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO'
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -105,17 +160,18 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_FILTER_BACKENDS': [
-    #     'django_filters.rest_framework.DjangoFilterBackend'
-    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }
 
 SIMPLE_JWT = {
     # how long the original token is valid for
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=2),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=5),
+    # Only for the team to test it!
 }
 
 AUTH_USER_MODEL = 'users.User'

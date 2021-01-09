@@ -16,33 +16,16 @@ class User(AbstractUser):
 
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=REGULAR)
 
+    @property
+    def is_admin(self):
 
-class Admin(User):
-    """[summary]
+        return self.role == User.ADMIN
 
-    :param User: [description]
-    :type User: [type]
-    """
+    @property
+    def is_super_admin(self):
 
-    def edit_user_details(self, user, details):
-        """[summary]
+        return self.role == User.SUPER_ADMIN
 
-        :param user: [description]
-        :type user: [type]
-        :param details: [description]
-        :type details: [type]
-        """
+    def __str__(self):
 
-        raise NotImplementedError
-
-    def update_user_tweet(self, tweet_id):
-        """[summary]
-
-        :param tweet_id: [description]
-        :type tweet_id: [type]
-        """
-
-        raise NotImplementedError
-
-    class Meta:
-        abstract = True
+        return f"<User: {self.first_name}>"
