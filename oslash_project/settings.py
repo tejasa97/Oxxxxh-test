@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import sys
 from pathlib import Path
 import datetime
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'f5!jewwwf%edp=4fv74rl_!dot6b^wdxdnzm%5lov=nq_)rz-r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -77,16 +78,10 @@ WSGI_APPLICATION = 'oslash_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'oslash',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# Database
+DATABASES = {}
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 LOGGING = {
     'version': 1,
